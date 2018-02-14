@@ -13,7 +13,8 @@ contract('RooExchangeBasic', function(accounts) {
 		}).then(function(exchangeInstance){
 			rooExchangeInstance = exchangeInstance;
 			return rooExchangeInstance.addToken("ROO", rooTokenInstance.address);
-		}).then(function(){
+		}).then(function(result){
+			assert(result.logs[0].event, "TokenAddedToSystem", "TokenAddedToSystem not emited");
 			return rooExchangeInstance.hasToken.call("ROO");
 		}).then(function(hasToken){
 			assert.equal(hasToken, true, "Token was not added");
