@@ -75,12 +75,19 @@ contract RooExchange is Owned {
     // DEPOSIT AND WITHDRAWAL ETHER //
     //////////////////////////////////
     function depositEther() public payable {
+        require(balanceEthForAddress[msg.sender] + msg.value >= balanceEthForAddress[msg.sender]);
+        balanceEthForAddress[msg.sender] += msg.value;
     }
 
     function withdrawEther(uint amountInWei) public {
+        require(balanceEthForAddress[msg.sender] - amountInWei >= 0);   
+        require(balanceEthForAddress[msg.sender] - amountInWei <= balanceEthForAddress[msg.sender]);     
+        balanceEthForAddress[msg.sender] -= amountInWei;
+        msg.sender.transfer(amountInWei);
     }
 
-    function getEthBalanceInWei() public constant returns (uint){
+    function getEthBalanceInWei() public view returns (uint){
+        return balanceEthForAddress[msg.sender];
     }
 
 
@@ -95,7 +102,7 @@ contract RooExchange is Owned {
         tokens[symbolNameIndex].tokenContract = erc20TokenAddress;
     }
 
-    function hasToken(string symbolName) public constant returns (bool) {
+    function hasToken(string symbolName) public view returns (bool) {
         uint8 index = getSymbolIndex(symbolName);
         if (index == 0) {
             return false;
@@ -104,7 +111,7 @@ contract RooExchange is Owned {
     }
 
 
-    function getSymbolIndex(string symbolName) internal returns (uint8) {
+    function getSymbolIndex(string symbolName) internal view returns (uint8) {
         for (uint8 i = 1; i <= symbolNameIndex; i++) {
             if (stringsEqual(tokens[i].symbolName, symbolName)) {
                 return i;
@@ -113,13 +120,19 @@ contract RooExchange is Owned {
         return 0;
     }
 
+    function getSymbolIndexOrThrow(string symbolName) internal view returns (uint8) {
+        uint8 index = getSymbolIndex(symbolName);
+        require(index > 0);
+        return index;
+    }
+
 
 
 
     ////////////////////////////////
     // STRING COMPARISON FUNCTION //
     ////////////////////////////////
-    function stringsEqual(string storage _a, string memory _b) internal returns (bool) {
+    function stringsEqual(string storage _a, string memory _b) internal view returns (bool) {
         bytes storage a = bytes(_a);
         bytes memory b = bytes(_b);
         if (a.length != b.length)
@@ -136,12 +149,34 @@ contract RooExchange is Owned {
     // DEPOSIT AND WITHDRAWAL TOKEN //
     //////////////////////////////////
     function depositToken(string symbolName, uint amount) public {
+        uint8 tokenIndex = getSymbolIndexOrThrow(symbolName);
+        require(tokens[tokenIndex].tokenContract != address(0));
+
+        ERC20Interface token = ERC20Interface(tokens[tokenIndex].tokenContract);
+
+        require(token.transferFrom(msg.sender, address(this), amount)==true);
+        require(tokenBalanceForAddress[msg.sender][tokenIndex] + amount >= tokenBalanceForAddress[msg.sender][tokenIndex]);   
+
+        tokenBalanceForAddress[msg.sender][tokenIndex] += amount; 
     }
 
     function withdrawToken(string symbolName, uint amount) public {
+        uint8 tokenIndex = getSymbolIndexOrThrow(symbolName);
+        require(tokens[tokenIndex].tokenContract != address(0));
+
+        ERC20Interface token = ERC20Interface(tokens[tokenIndex].tokenContract);
+
+        require(tokenBalanceForAddress[msg.sender][tokenIndex] - amount >= 0);     
+        require(tokenBalanceForAddress[msg.sender][tokenIndex] - amount <= tokenBalanceForAddress[msg.sender][tokenIndex]);   
+
+        tokenBalanceForAddress[msg.sender][tokenIndex] -= amount; 
+        require(token.transfer(msg.sender, amount) == true);
     }
 
-    function getBalance(string symbolName) public constant returns (uint) {
+    function getBalance(string symbolName) public view returns (uint) {
+        uint8 tokenIndex = getSymbolIndexOrThrow(symbolName);
+
+        return tokenBalanceForAddress[msg.sender][tokenIndex];
     }
 
 
@@ -149,14 +184,14 @@ contract RooExchange is Owned {
     /////////////////////////////
     // ORDER BOOK - BID ORDERS //
     /////////////////////////////
-    function getBuyOrderBook(string symbolName) public constant returns (uint[], uint[]) {
+    function getBuyOrderBook(string symbolName) public view returns (uint[], uint[]) {
     }
 
 
     /////////////////////////////
     // ORDER BOOK - ASK ORDERS //
     /////////////////////////////
-    function getSellOrderBook(string symbolName) public constant returns (uint[], uint[]) {
+    function getSellOrderBook(string symbolName) public view returns (uint[], uint[]) {
     }
 
 
