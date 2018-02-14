@@ -1,6 +1,6 @@
 var RooToken = artifacts.require("./RooToken.sol");
 
-contract('RooToken', function(accounts) {
+contract('RooToken Basic Tests', function(accounts) {
 
 	it("...first account should own all tokens", function() {
 		var _totalSupply;

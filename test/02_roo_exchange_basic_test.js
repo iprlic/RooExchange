@@ -1,7 +1,7 @@
 var RooToken = artifacts.require("./RooToken.sol");
 var RooExchange = artifacts.require("./RooExchange.sol");
 
-contract('RooExchangeBasic', function(accounts) {
+contract('RooExchange Basic Tests', function(accounts) {
 
 	it("...should be possible to add tokens to the exchange", function() {
 		var rooTokenInstance;
