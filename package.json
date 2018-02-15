@@ -15,7 +15,6 @@
     "cross-spawn": "4.0.2",
     "css-loader": "0.26.0",
     "detect-port": "1.0.1",
-    "dotenv": "2.0.0",
     "eslint": "3.8.1",
     "eslint-config-react-app": "^0.5.0",
     "eslint-loader": "1.6.0",
@@ -50,8 +49,13 @@
   },
   "dependencies": {
     "dotenv": "^2.0.0",
+    "purecss": "^1.0.0",
     "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "react-dom": "^15.4.2",
+    "react-icons": "^2.2.7",
+    "react-router-dom": "^4.2.2",
+    "typeface-open-sans": "^0.0.54",
+    "typeface-oswald": "^0.0.54"
   },
   "scripts": {
     "start": "node scripts/start.js",

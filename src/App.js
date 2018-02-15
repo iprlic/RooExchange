@@ -1,11 +1,19 @@
 import React, { Component } from 'react'
 import SimpleStorageContract from '../build/contracts/SimpleStorage.json'
 import getWeb3 from './utils/getWeb3'
+import history from './utils/history';
 
-import './css/oswald.css'
-import './css/open-sans.css'
-import './css/pure-min.css'
+import 'typeface-oswald'
+import 'typeface-open-sans'
+import 'purecss'
 import './App.css'
+
+import NavigationContainer from './components/navigation'
+import MgmtContainer from './components/mgmt'
+import TradingContainer from './components/trading'
+import DashboardContainer from './components/dashboard'
+import { Router, Route, Switch  } from 'react-router-dom';
+
 
 class App extends Component {
   constructor(props) {
@@ -69,19 +77,43 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <nav className="navbar pure-menu pure-menu-horizontal">
-            <a href="#" className="pure-menu-heading pure-menu-link">RooExchange</a>
+      <Router history={history}>
+        <div className="App">
+
+          <NavigationContainer />
+          <nav className="navbar pure-menu pure-menu-horizontal">
+          <a href="/" className="pure-menu-heading pure-menu-link">RooExchange</a>
+          
+          <ul className="pure-menu-list">
+              <li className="pure-menu-item">
+                <a href="/roo-trading" className="pure-menu-link">Roo Token Trading</a>
+              </li>
+              <li className="pure-menu-item">
+                <a href="/token-mgmt" className="pure-menu-link">Token management</a>
+              </li>
+          </ul>
         </nav>
 
-        <main className="container">
-          <div className="pure-g">
-            <div className="pure-u-1-1">
-              <h1>Good to Go!</h1>
-            </div>
-          </div>
-        </main>
-      </div>
+          <main className="container">
+                <div className="pure-g">
+                   <div className="pure-u-1-1">
+
+                  <Switch>
+                    <Route exact path="/" render={() => <DashboardContainer />} />
+                    <Route
+                      path="/roo-trading"
+                      render={() => <TradingContainer  />}
+                    />
+                    <Route
+                      path="/token-mgmt"
+                      render={() => <MgmtContainer  />}
+                    />
+                  </Switch>
+                  </div>
+                </div>
+          </main>
+        </div>
+      </Router>
     );
   }
 }
