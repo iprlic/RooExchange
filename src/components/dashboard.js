@@ -33,13 +33,13 @@ class DashboardContainer extends Component {
 
 	componentDidMount(){   
 		this.updateBalance();
-	  rooExchangeService.on('balanceUpdated', this.updateBalance);
+	  	rooExchangeService.on('balanceUpdated', this.updateBalance);
 	}
 
 	updateBalance(){
 		const tokenBalance = rooExchangeService.getTokenBalance();
 		const etherBalance = rooExchangeService.getEtherBalance();
-	  this.setState({ tokenBalance: tokenBalance, etherBalance: etherBalance });
+	  	this.setState({ tokenBalance: tokenBalance, etherBalance: etherBalance });
 	}
 
 	handleDepositToken = async (event) => {

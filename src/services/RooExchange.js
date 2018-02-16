@@ -18,7 +18,8 @@ class RooExchangeService extends EventEmitter{
 			_web3 = results.web3;
       		// Instantiate contract once web3 provided.
       		this._instantiateContract();
-	    	this._watchExchangeEvents();
+			this._watchExchangeEvents();
+			this._updateTokenBalance()
 	    })
 	    .catch(() => {
       		console.log('Error finding web3.');
@@ -45,6 +46,24 @@ class RooExchangeService extends EventEmitter{
 
 	}
 
+	_updateTokenBalance(){
+		let rooExchangeInstance;
+
+		_rooExchange.deployed().then((instance) => {
+	        rooExchangeInstance = instance;
+        	return rooExchangeInstance.getBalance('ROO', { from : _account});
+		}).then((balance) => {
+			_tokenBalance = balance.toNumber();
+        	return rooExchangeInstance.getEthBalanceInWei({ from : _account});
+		}).then((balance) => {
+			_etherBalance = balance.toNumber();
+			this.emit("balanceUpdated");
+		}).catch((error) => {
+			console.error("Can't fetch balance", error);
+		});
+	    
+	}
+
 	_watchExchangeEvents(){
 		let rooExchangeInstance;
 
@@ -52,12 +71,49 @@ class RooExchangeService extends EventEmitter{
 	        rooExchangeInstance = instance;
         	return rooExchangeInstance.allEvents({},{ fromBlock: 0, toBlock: 'latest'}).watch((error, result)=> {
 				console.info(result.event, result.args);
-			})
+			});
 		}).catch((error) => {
 			console.error('Exchange watching events error', error);
 		});
-    }
-    
+	}
+	
+	getTokenBalance=()=>{
+		return _tokenBalance;
+	}
+	
+
+	getEtherBalance=()=>{
+		return _etherBalance;
+	}
+
+	depositToken = async(symbol, amount)=>{
+		let rooExchangeInstance;
+		let amt = parseInt(amount, 10);
+		return _rooExchange.deployed().then((instance) => {
+			rooExchangeInstance = instance;
+			console.log(symbol, amt);
+			return rooExchangeInstance.depositToken(symbol, amt, { from: _account, gas: 4500000 })
+		}).then(() => {
+        	return this._updateTokenBalance()
+		}).catch((error) => {
+			console.error("Can't deposit token", error);
+		});
+	}
+
+	withdrawToken = async(symbol, amount)=>{
+		let rooExchangeInstance;
+		let amt = parseInt(amount, 10);
+		return _rooExchange.deployed().then((instance) => {
+			rooExchangeInstance = instance;
+			console.log(symbol, amt);
+			return rooExchangeInstance.withdrawToken(symbol, amt, { from: _account })
+		}).then(() => {
+        	return this._updateTokenBalance()
+		}).catch((error) => {
+			console.error("Can't deposit token", error);
+		});
+	}
+	
     addToken = async (tokenSymbol, tokenAddress)=>{
 		return _rooExchange.deployed().then((instance) => {
 			return instance.addToken(tokenSymbol, tokenAddress, { from: _account })
@@ -65,8 +121,6 @@ class RooExchangeService extends EventEmitter{
 			console.error("Can't add coin", error);
 		});
 	}
-
-
 }
 
 const rooExchangeService = new RooExchangeService()

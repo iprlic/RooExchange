@@ -85,12 +85,11 @@ class RooTokenService extends EventEmitter{
 	sendToken = async (amount, reciever)=>{
 		let rooTokenInstance;
 		let amt = parseInt(amount, 10);
-		console.log(amount, amt);
 		return _rooToken.deployed().then((instance) => {
 			rooTokenInstance = instance;
 			return rooTokenInstance.transfer(reciever, amt, { from: _account })
 		}).then(() => {
-        	return this._updateTokenBalance()
+        	return this._updateTokenBalance();
 		}).catch((error) => {
 			console.error("Can't send token", error);
 		});
