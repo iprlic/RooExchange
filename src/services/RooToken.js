@@ -71,7 +71,7 @@ class RooTokenService extends EventEmitter{
 				console.info(result.event, result.args);
 			})
 		}).catch((error) => {
-			console.error("Can't fetch balance", error);
+			console.error("Token watching events error", error);
 		});
 	}
 
@@ -89,7 +89,7 @@ class RooTokenService extends EventEmitter{
 		}).then(() => {
         	return this._updateTokenBalance()
 		}).catch((error) => {
-			console.error("Can't fetch balance", error);
+			console.error("Can't send token", error);
 		});
 	}
 
@@ -103,7 +103,7 @@ class RooTokenService extends EventEmitter{
 		}).then(() => {
         	return this._updateTokenBalance()
 		}).catch((error) => {
-			console.error("Can't fetch balance", error);
+			console.error("Can't allow token", error);
 		});
 
 	}

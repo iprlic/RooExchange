@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import rooTokenService from '../services/RooToken'
+import rooExchangeService from '../services/RooExchange'
 
 class MgmtContainer extends Component {
 	constructor(props) {
@@ -17,6 +18,11 @@ class MgmtContainer extends Component {
 					allowanceToken:{
 						allowanceAmount: '',
 						allowanceAddress: '',
+						hasChanges: false
+					},
+					addToken:{
+						tokenSymbol: '',
+						tokenAddress: '',
 						hasChanges: false
 					}
 	    };
@@ -44,6 +50,18 @@ class MgmtContainer extends Component {
 		});
 	}
 
+	handleAddToken = async (event) => {
+		event.preventDefault();
+		await rooExchangeService.addToken(this.state.addToken.tokenSymbol, this.state.addToken.tokenAddress);
+		this.setState({
+			addToken:{
+				tokenSymbol: '',
+				tokenAddress: '',
+				hasChanges: false
+			}
+		});
+	}
+
 	handleAllowanceToken = async (event) => {
 		event.preventDefault();
 		console.log(this.state);
@@ -65,7 +83,7 @@ class MgmtContainer extends Component {
 		let newFormState = this.state[form];
 		newFormState[name] = value;
 		newFormState.hasChanges = true;
-		
+
     this.setState({
 			[form]: newFormState
 		});
@@ -113,6 +131,7 @@ class MgmtContainer extends Component {
 									</fieldset>
 								</form>
 							</div>
+							
 							<div className="pure-u-1-2">
 								<form className="pure-form pure-form-aligned">
 									<h2>Approve RooCoin Allowance</h2>
@@ -141,6 +160,38 @@ class MgmtContainer extends Component {
 								</form>
 							</div>
 					</div>
+
+					<div className="pure-g">
+							<div className="pure-u-1-2">
+								<form className="pure-form pure-form-aligned">
+									<h2>Add Coin to RooExchange</h2>
+									<fieldset>
+										<div className="pure-control-group">
+												<label htmlFor="tokenSymbol">Token symbol</label>
+												<input name="tokenSymbol" type="text" placeholder="e.g. ROO" 
+													value={this.state.addToken.tokenSymbol} 
+													onChange={this.handleInputChange.bind(this, 'addToken')}
+													/>
+												<span className="pure-form-message-inline">This is a required field.</span>
+										</div>
+										<div className="pure-control-group">
+												<label htmlFor="tokenAddress">Token address</label>
+												<input name="tokenAddress" type="text" placeholder="e.g. 0x1d4c73585d48..." 
+													value={this.state.addToken.tokenAddress}
+													onChange={this.handleInputChange.bind(this, 'addToken')}
+													/>
+												<span className="pure-form-message-inline">This is a required field.</span>
+
+												
+										</div>
+										<div className="pure-controls">
+												<button type="submit" className="pure-button pure-button-primary" 
+													onClick={this.handleAddToken} disabled={!this.state.addToken.hasChanges}>Add Token</button>
+										</div>
+									</fieldset>
+								</form>
+							</div>
+						</div>
 				</div>
 	    );
   	}
