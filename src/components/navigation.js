@@ -75,10 +75,10 @@ class NavigationContainer extends Component {
         <ul className="pure-menu-list">
             {
               this.state.pages.map((page, i) => (
-                <li className="pure-menu-item" key={i}>
+                <li className={'pure-menu-item' + (page.active ? ' pure-menu-selected' : '') } key={i}>
                   <Link
                     to={page.url}
-                    className={'link-container' + (page.active ? ' active' : '') + ' pure-menu-link' } >
+                    className={'link-container pure-menu-link' } >
                     {page.name}
                   </Link>
                 </li>

@@ -44,6 +44,10 @@ code {
 }
 
 .navbar a {
+  color: rgb(153, 146, 146);
+}
+
+.navbar .pure-menu-selected a {
   color: #fff;
 }
 
