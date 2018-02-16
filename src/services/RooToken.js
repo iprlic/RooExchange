@@ -60,7 +60,6 @@ class RooTokenService extends EventEmitter{
 			console.error("Can't fetch balance", error);
 		});
 	    
-
 	}
 
 	_watchTokenEvents(){
@@ -86,12 +85,9 @@ class RooTokenService extends EventEmitter{
 		console.log(amount, amt);
 		return _rooToken.deployed().then((instance) => {
 			rooTokenInstance = instance;
-			rooTokenInstance.transfer(reciever, amt, { from: _account })
+			return rooTokenInstance.transfer(reciever, amt, { from: _account })
 		}).then(() => {
-        	return rooTokenInstance.balanceOf(_account);
-		}).then((balance) => {
-			_balance = balance.toNumber();
-			this.emit("balanceUpdated");
+        	return this._updateTokenBalance()
 		}).catch((error) => {
 			console.error("Can't fetch balance", error);
 		});
