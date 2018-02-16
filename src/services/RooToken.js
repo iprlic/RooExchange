@@ -63,15 +63,18 @@ class RooTokenService extends EventEmitter{
 	}
 
 	_watchTokenEvents(){
-		let rooTokenInstance;
-
 		_rooToken.deployed().then((instance) => {
-	        rooTokenInstance = instance;
-        	return rooTokenInstance.allEvents({},{ fromBlock: 0, toBlock: 'latest'}).watch((error, result)=> {
+        	instance.allEvents({},{ fromBlock: 0, toBlock: 'latest'}).watch((error, result)=> {
 				console.info(result.event, result.args);
-			})
-		}).catch((error) => {
-			console.error("Token watching events error", error);
+			});
+
+			instance.Transfer({ from:_account },{ fromBlock: 0, toBlock: 'latest'}).watch((error, result)=> {
+				this._updateTokenBalance();
+			});
+
+			instance.Transfer({ to:_account },{ fromBlock: 0, toBlock: 'latest'}).watch((error, result)=> {
+				this._updateTokenBalance();
+			});
 		});
 	}
 
