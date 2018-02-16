@@ -93,6 +93,21 @@ class RooTokenService extends EventEmitter{
 		});
 	}
 
+	allowanceToken  = async (amount, reciever)=>{
+		let rooTokenInstance;
+		let amt = parseInt(amount, 10);
+		console.log(amount, amt);
+		return _rooToken.deployed().then((instance) => {
+			rooTokenInstance = instance;
+			return rooTokenInstance.approve( reciever, amt, { from: _account })
+		}).then(() => {
+        	return this._updateTokenBalance()
+		}).catch((error) => {
+			console.error("Can't fetch balance", error);
+		});
+
+	}
+
 }
 
 const rooTokenService = new RooTokenService()

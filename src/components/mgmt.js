@@ -13,6 +13,11 @@ class MgmtContainer extends Component {
 						sendAmount: '',
 						sendAddress: '',
 						hasChanges: false
+					},
+					allowanceToken:{
+						allowanceAmount: '',
+						allowanceAddress: '',
+						hasChanges: false
 					}
 	    };
 	}
@@ -39,17 +44,33 @@ class MgmtContainer extends Component {
 		});
 	}
 
+	handleAllowanceToken = async (event) => {
+		event.preventDefault();
+		console.log(this.state);
+		await rooTokenService.allowanceToken(this.state.allowanceToken.allowanceAmount, this.state.allowanceToken.allowanceAddress);
+		this.setState({
+			allowanceToken: {
+				allowanceAmount: '',
+				allowanceAddress: '',
+				hasChanges: false
+			}
+		});
+	}
+
 	handleInputChange = (form, event) =>  {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
-		const name = target.id;
+		const name = target.name;
+
+		let newFormState = this.state[form];
+		newFormState[name] = value;
+		newFormState.hasChanges = true;
 		
     this.setState({
-			[form]: { 
-				[name]: value,
-				hasChanges: true
-			}
+			[form]: newFormState
 		});
+
+		console.log(this.state);
   }
 
 
@@ -63,13 +84,13 @@ class MgmtContainer extends Component {
 						</div>
 					</div>
 					<div className="pure-g">
-							<div className="pure-u-1 pure-u-md-1-2">
+							<div className="pure-u-1-2">
 								<form className="pure-form pure-form-aligned">
 									<h2>Send RooCoin</h2>
 									<fieldset>
 										<div className="pure-control-group">
 												<label htmlFor="sendAmount">Amount in Token</label>
-												<input id="sendAmount" type="text" placeholder="e.g. 77" 
+												<input name="sendAmount" type="text" placeholder="e.g. 77" 
 													value={this.state.sendToken.sendAmount} 
 													onChange={this.handleInputChange.bind(this, 'sendToken')}
 													/>
@@ -77,7 +98,7 @@ class MgmtContainer extends Component {
 										</div>
 										<div className="pure-control-group">
 												<label htmlFor="sendAddress">To (address)</label>
-												<input id="sendAddress" type="text" placeholder="e.g. 0x1d4c73585d48..." 
+												<input name="sendAddress" type="text" placeholder="e.g. 0x1d4c73585d48..." 
 													value={this.state.sendToken.sendAddress}
 													onChange={this.handleInputChange.bind(this, 'sendToken')}
 													/>
@@ -92,8 +113,32 @@ class MgmtContainer extends Component {
 									</fieldset>
 								</form>
 							</div>
-							<div className="pure-u-1 pure-u-md-1-2">
-							
+							<div className="pure-u-1-2">
+								<form className="pure-form pure-form-aligned">
+									<h2>Approve RooCoin Allowance</h2>
+									<fieldset>
+										<div className="pure-control-group">
+												<label htmlFor="allowanceAmount">Amount in Token</label>
+												<input name="allowanceAmount" type="text" placeholder="e.g. 77" 
+													value={this.state.allowanceToken.allowanceAmount} 
+													onChange={this.handleInputChange.bind(this, 'allowanceToken')}
+													/>
+												<span className="pure-form-message-inline">This is a required field.</span>
+										</div>
+										<div className="pure-control-group">
+												<label htmlFor="allowanceAddress">To (address)</label>
+												<input name="allowanceAddress" type="text" placeholder="e.g. 0x1d4c73585d48..." 
+													value={this.state.allowanceToken.allowanceAddress}
+													onChange={this.handleInputChange.bind(this, 'allowanceToken')}
+													/>
+												<span className="pure-form-message-inline">This is a required field.</span>
+										</div>
+										<div className="pure-controls">
+												<button type="submit" className="pure-button pure-button-primary" 
+													onClick={this.handleAllowanceToken} disabled={!this.state.allowanceToken.hasChanges}>Allow RooCoin to be used</button>
+										</div>
+									</fieldset>
+								</form>
 							</div>
 					</div>
 				</div>
