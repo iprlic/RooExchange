@@ -6,6 +6,8 @@ import getWeb3 from '../utils/getWeb3'
 let _web3;
 let _accounts;
 let _account;
+let _tokenBalance;
+let _etherBalance;
 let _rooExchange = contract(RooExchangeContract);
 
 class RooExchangeService extends EventEmitter{

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import rooTokenService from '../services/RooToken'
 import rooExchangeService from '../services/RooExchange'
 
@@ -131,7 +131,7 @@ class MgmtContainer extends Component {
 									</fieldset>
 								</form>
 							</div>
-							
+
 							<div className="pure-u-1-2">
 								<form className="pure-form pure-form-aligned">
 									<h2>Approve RooCoin Allowance</h2>
