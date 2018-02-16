@@ -21,7 +21,7 @@ class RooExchangeService extends EventEmitter{
 	    	this._watchExchangeEvents();
 	    })
 	    .catch(() => {
-      		console.log('Error finding web3.')
+      		console.log('Error finding web3.');
 	    });
 	}
 
