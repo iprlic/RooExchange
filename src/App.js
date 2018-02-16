@@ -21,8 +21,6 @@ class App extends Component {
         <div className="App">
           <NavigationContainer />
           <main className="container">
-                <div className="pure-g">
-                   <div className="pure-u-1-1">
                     <Switch>
                       <Route exact path="/" render={() => <DashboardContainer />} />
                       <Route
@@ -34,8 +32,6 @@ class App extends Component {
                         render={() => <MgmtContainer  />}
                       />
                     </Switch>
-                  </div>
-                </div>
           </main>
         </div>
       </Router>

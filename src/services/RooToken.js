@@ -17,7 +17,7 @@ class RooTokenService extends EventEmitter{
 			_web3 = results.web3;
       		// Instantiate contract once web3 provided.
       		this._instantiateContract();
-	    	//this._watchTokenEvents();
+	    	this._watchTokenEvents();
 	    })
 	    .catch(() => {
       		console.log('Error finding web3.')
@@ -52,8 +52,6 @@ class RooTokenService extends EventEmitter{
 
 		_rooToken.deployed().then((instance) => {
 	        rooTokenInstance = instance;
-
-	        // Stores a given value, 5 by default.
         	return rooTokenInstance.balanceOf(_account);
 		}).then((balance) => {
 			_balance = balance.toNumber();
@@ -65,8 +63,38 @@ class RooTokenService extends EventEmitter{
 
 	}
 
+	_watchTokenEvents(){
+		let rooTokenInstance;
+
+		_rooToken.deployed().then((instance) => {
+	        rooTokenInstance = instance;
+        	return rooTokenInstance.allEvents({},{ fromBlock: 0, toBlock: 'latest'}).watch((error, result)=> {
+				console.info(result.event, result.args);
+			})
+		}).catch((error) => {
+			console.error("Can't fetch balance", error);
+		});
+	}
+
 	getBalance(){
 		return _balance;
+	}
+
+	sendToken = async (amount, reciever)=>{
+		let rooTokenInstance;
+		let amt = parseInt(amount, 10);
+		console.log(amount, amt);
+		return _rooToken.deployed().then((instance) => {
+			rooTokenInstance = instance;
+			rooTokenInstance.transfer(reciever, amt, { from: _account })
+		}).then(() => {
+        	return rooTokenInstance.balanceOf(_account);
+		}).then((balance) => {
+			_balance = balance.toNumber();
+			this.emit("balanceUpdated");
+		}).catch((error) => {
+			console.error("Can't fetch balance", error);
+		});
 	}
 
 }
