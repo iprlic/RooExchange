@@ -280,6 +280,37 @@ class RooExchangeService extends EventEmitter{
 			console.error("Can't add coin", error);
 		});
 	}
+
+	sellToken = async(symbol, amount, price)=>{
+		let rooExchangeInstance;
+		let amt = parseInt(amount, 10);
+		let prc = parseInt(price, 10);
+		return _rooExchange.deployed().then((instance) => {
+			rooExchangeInstance = instance;
+			console.log(symbol);
+			console.log(prc);
+			console.log(amt);
+			return rooExchangeInstance.sellToken(symbol, amt, prc,{ from: _account, gas:4000000});
+		}).then(() => {
+        	return this._updateTokenBalance()
+		}).catch((error) => {
+			console.error("Can't sell token", error);
+		});
+	}
+
+	buyToken = async(symbol, amount, price)=>{
+		let rooExchangeInstance;
+		let amt = parseInt(amount, 10);
+		let prc = parseInt(price, 10);
+		return _rooExchange.deployed().then((instance) => {
+			rooExchangeInstance = instance;
+			return rooExchangeInstance.buyToken(symbol, amt, prc,{ from: _account, gas:4000000});
+		}).then(() => {
+        	return this._updateTokenBalance()
+		}).catch((error) => {
+			console.error("Can't buy token", error);
+		});
+	}
 }
 
 const rooExchangeService = new RooExchangeService()
