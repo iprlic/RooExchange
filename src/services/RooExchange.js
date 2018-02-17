@@ -290,7 +290,7 @@ class RooExchangeService extends EventEmitter{
 			console.log(symbol);
 			console.log(prc);
 			console.log(amt);
-			return rooExchangeInstance.sellToken(symbol, amt, prc,{ from: _account, gas:4000000});
+			return rooExchangeInstance.sellToken(symbol, prc, amt,{ from: _account, gas:4000000});
 		}).then(() => {
         	return this._updateTokenBalance()
 		}).catch((error) => {
@@ -304,7 +304,7 @@ class RooExchangeService extends EventEmitter{
 		let prc = parseInt(price, 10);
 		return _rooExchange.deployed().then((instance) => {
 			rooExchangeInstance = instance;
-			return rooExchangeInstance.buyToken(symbol, amt, prc,{ from: _account, gas:4000000});
+			return rooExchangeInstance.buyToken(symbol, prc, amt,{ from: _account, gas:4000000});
 		}).then(() => {
         	return this._updateTokenBalance()
 		}).catch((error) => {
