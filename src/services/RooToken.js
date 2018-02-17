@@ -8,6 +8,7 @@ let _web3;
 let _accounts;
 let _account;
 let _rooToken = contract(RooTokenContract);
+let _tokenAddress;
 
 class RooTokenService extends EventEmitter{
 
@@ -16,7 +17,8 @@ class RooTokenService extends EventEmitter{
 		getWeb3.then(results => {
 			_web3 = results.web3;
       		// Instantiate contract once web3 provided.
-      		this._instantiateContract();
+			this._instantiateContract();
+			this._updateTokenBalance();
 	    	this._watchTokenEvents();
 	    })
 	    .catch(() => {
@@ -25,6 +27,7 @@ class RooTokenService extends EventEmitter{
 	}
 
 	_instantiateContract(){
+		const _this = this;
     	_rooToken.setProvider(_web3.currentProvider);
     	  // Get accounts.
 	    _web3.eth.getAccounts((error, accs) => {
@@ -38,13 +41,20 @@ class RooTokenService extends EventEmitter{
 			 	return;
 			}
 
-	       _accounts = accs;
-	       console.log(accs);
-	       _account = _accounts[0];
-	       this._updateTokenBalance();
+	       	_accounts = accs;
+		   	_account = _accounts[0];
+
+		   	_rooToken.deployed().then(function (instance) {
+				_tokenAddress = instance.address;
+				_this.emit('addressFetched');
+			});
 
 		});
 
+	}
+
+	getAddress(){
+		return _tokenAddress;
 	}
 
 	_updateTokenBalance(){

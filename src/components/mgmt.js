@@ -76,15 +76,15 @@ class MgmtContainer extends Component {
 	}
 
 	handleInputChange = (form, event) =>  {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
+    	const target = event.target;
+    	const value = target.type === 'checkbox' ? target.checked : target.value;
 		const name = target.name;
 
 		let newFormState = this.state[form];
 		newFormState[name] = value;
 		newFormState.hasChanges = true;
 
-    this.setState({
+    	this.setState({
 			[form]: newFormState
 		});
 

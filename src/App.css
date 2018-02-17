@@ -43,7 +43,6 @@ code {
   font-family: 'Oswald', 'Arial Narrow', sans-serif;
 }
 
-
 .navbar li a {
   color: rgb(153, 146, 146);
 }
@@ -69,4 +68,15 @@ code {
 
 .navbar .navbar-right {
   float: right;
+}
+
+.pure-table{
+  width: 100%;
+}
+
+.pure-table td{
+  overflow:hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
 }
