@@ -70,7 +70,7 @@ class NavigationContainer extends Component {
   render() {
     return (
       <nav className="navbar pure-menu pure-menu-horizontal">
-        <a href="/" className="pure-menu-heading pure-menu-link">RooExchange</a>
+        <a href="/" className="pure-menu-heading pure-menu-link"></a>
         
         <ul className="pure-menu-list">
             {
