@@ -78,18 +78,20 @@ class RooExchangeService extends EventEmitter{
 	        rooExchangeInstance = instance;
         	return rooExchangeInstance.getSellOrderBook('ROO');
 		}).then((book) => {
+
 			_sellOrderBook = book[0].map((price, i)=>{
 				return {
-					'price': price,
-					'volume': book[1][i]
+					'price': price.toNumber(),
+					'volume': book[1][i].toNumber()
 				};
 			});
+			console.log(_sellOrderBook);
 			return rooExchangeInstance.getBuyOrderBook('ROO');
 		}).then((book) => {
 			_buyOrderBook = book[0].map((price, i)=>{
 				return {
-					'price': price,
-					'volume': book[1][i]
+					'price': price.toNumber(),
+					'volume': book[1][i].toNumber()
 				};
 			});
 			this.emit('orderBookUpdated');
@@ -216,7 +218,7 @@ class RooExchangeService extends EventEmitter{
 		return _buyOrderBook;
 	}
 
-	getBuySellBook=()=>{
+	getSellOrderBook=()=>{
 		return _sellOrderBook;
 	}
 

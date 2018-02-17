@@ -7,6 +7,8 @@ class TradingContainer extends Component {
 	constructor(props) {
 		super(props);
 
+		this.updateOrderBooks = this.updateOrderBooks.bind(this);
+
 		this.state = {
 				buyOrderBook: [],
 				sellOrderBook: [],
@@ -23,6 +25,21 @@ class TradingContainer extends Component {
 					hasChanges: false
 				}
 		};
+	}
+
+	componentDidMount(){   
+		this.updateOrderBooks();
+
+		rooExchangeService.on('orderBookUpdated', this.updateOrderBooks);
+	}
+
+	updateOrderBooks(){
+		const buy = rooExchangeService.getBuyOrderBook();
+		const sell = rooExchangeService.getSellOrderBook();
+		console.log(buy);
+		console.log(sell);
+
+		this.setState({ buyOrderBook:buy, sellOrderBook: sell });
 	}
 
 
