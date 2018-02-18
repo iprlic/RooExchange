@@ -26,9 +26,9 @@ class NavigationContainer extends Component {
 
     this.state = {
       pages: [
-        { key: 'exchange-overview', name: 'Exchange overview', url: '/', active: false, visible: true },
-        { key: 'token-trading', name: 'RooCoin trading',  url: '/token-trading', active: false, visible: true },
-        { key: 'token-mgmt', name: 'Token management', url: '/token-mgmt', active: false, visible: true }
+        { key: 'exchange-overview', name: 'Exchange overview', url: process.env.PUBLIC_URL + '/', active: false, visible: true },
+        { key: 'token-trading', name: 'RooCoin trading',  url: process.env.PUBLIC_URL + '/token-trading', active: false, visible: true },
+        { key: 'token-mgmt', name: 'Token management', url: process.env.PUBLIC_URL + '/token-mgmt', active: false, visible: true }
       ]
     };
   }

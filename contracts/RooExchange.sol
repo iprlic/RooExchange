@@ -6,7 +6,6 @@ import "./RooToken.sol";
 
 
 contract RooExchange is Owned {
-
     ///////////////////////
     // GENERAL STRUCTURE //
     ///////////////////////
@@ -60,9 +59,6 @@ contract RooExchange is Owned {
     mapping (address => mapping (uint8 => uint)) tokenBalanceForAddress;
 
     mapping (address => uint) balanceEthForAddress;
-
-
-
 
     ////////////
     // EVENTS //
@@ -438,24 +434,21 @@ contract RooExchange is Owned {
                     tokens[tokenIndex].curBuyPrice = priceInWei;
                     tokens[tokenIndex].buyBook[priceInWei].higherPrice = priceInWei;
                     tokens[tokenIndex].buyBook[priceInWei].lowerPrice = 0;
-                }
-                else {
+                } else {
                     //or the lowest one
                     tokens[tokenIndex].buyBook[lowestBuyPrice].lowerPrice = priceInWei;
                     tokens[tokenIndex].buyBook[priceInWei].higherPrice = lowestBuyPrice;
                     tokens[tokenIndex].buyBook[priceInWei].lowerPrice = 0;
                 }
                 tokens[tokenIndex].lowestBuyPrice = priceInWei;
-            }
-            else if (curBuyPrice < priceInWei) {
+            }else if (curBuyPrice < priceInWei) {
                 //the offer to buy is the highest one, we don't need to find the right spot
                 tokens[tokenIndex].buyBook[curBuyPrice].higherPrice = priceInWei;
                 tokens[tokenIndex].buyBook[priceInWei].higherPrice = priceInWei;
                 tokens[tokenIndex].buyBook[priceInWei].lowerPrice = curBuyPrice;
                 tokens[tokenIndex].curBuyPrice = priceInWei;
 
-            }
-            else {
+            } else {
                 //we are somewhere in the middle, we need to find the right spot first...
 
                 uint buyPrice = tokens[tokenIndex].curBuyPrice;
@@ -645,8 +638,7 @@ contract RooExchange is Owned {
                     tokens[tokenIndex].curSellPrice = priceInWei;
                     tokens[tokenIndex].sellBook[priceInWei].higherPrice = 0;
                     tokens[tokenIndex].sellBook[priceInWei].lowerPrice = 0;
-                }
-                else {
+                } else {
 
                     //this is the highest sell order
                     tokens[tokenIndex].sellBook[highestSellPrice].higherPrice = priceInWei;
@@ -664,8 +656,7 @@ contract RooExchange is Owned {
                 tokens[tokenIndex].sellBook[priceInWei].lowerPrice = 0;
                 tokens[tokenIndex].curSellPrice = priceInWei;
 
-            }
-            else {
+            }else {
                 //we are somewhere in the middle, we need to find the right spot first...
 
                 uint sellPrice = tokens[tokenIndex].curSellPrice;
@@ -710,8 +701,7 @@ contract RooExchange is Owned {
             tokens[tokenIndex].sellBook[priceInWei].offers[offerKey].amount = 0;
             SellOrderCanceled(tokenIndex, priceInWei, offerKey);
 
-        }
-        else {
+        } else {
             require(tokens[tokenIndex].buyBook[priceInWei].offers[offerKey].who == msg.sender);
             uint etherToRefund = tokens[tokenIndex].buyBook[priceInWei].offers[offerKey].amount * priceInWei;
             require(balanceEthForAddress[msg.sender] + etherToRefund >= balanceEthForAddress[msg.sender]);
